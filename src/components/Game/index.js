@@ -2,29 +2,64 @@ import React, { Component } from "react";
 import Navbar from "../Navbar"
 import Tile from "../Tiles"
 import data from "../../data.json"
+import Jumbotron from "../Jumbotron"
+import Randomizer from "react-randomizer"
 
 class Game extends Component {
     state = {
         data,
         score: 0,
-        topScore: 0
+        topScore: 0,
+        clicked: []
     };
 
     handleImgClick = id => {
-        this.setState({ score: this.state.score + 1 });
-    }
+        if (this.state.clicked.indexOf(id) === -1) {
+            this.handleIncrement();
+            this.setState({ clicked: this.state.clicked.concat(id) })
+        } else {
+            alert("Please try again.")
+            this.handleReset();
+        }
+    };
+
+    handleIncrement = () => {
+        const newScore = this.state.score + 1;
+        this.setState({
+            score: newScore
+        });
+        if (newScore >= this.state.topScore) {
+            this.setState({ topScore: newScore });
+        }
+        if (this.state.topScore === 12) {
+            alert("You win! That's a great memory you have!");
+        }
+    };
+
+    handleReset = () => {
+        this.setState({
+            score: 0,
+            topScore: this.state.topScore,
+            clicked: []
+        });
+    };
 
     render() {
         const { data, score, topScore } = this.state;
         return (
             <div>
                 <Navbar score={score} topScore={topScore} />
-                {data.map(item =>
-                    <Tile
-                        handleImgClick={this.handleImgClick}
-                        key={item.id} {...item}
-                    />
-                )}
+                <Jumbotron />
+                <div className="container justify-content-center">
+                    <div className="row d-flex justify-content-around">
+                        {Randomizer.randomizeArray(data).map(item =>
+                            <Tile
+                                handleImgClick={this.handleImgClick}
+                                key={item.id} {...item}
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
         )
     }
