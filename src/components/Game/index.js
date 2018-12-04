@@ -17,6 +17,7 @@ class Game extends Component {
         if (this.state.clicked.indexOf(id) === -1) {
             this.handleIncrement();
             this.setState({ clicked: this.state.clicked.concat(id) })
+            console.log(this.state.clicked)
         } else {
             alert("Please try again.")
             this.handleReset();
@@ -30,10 +31,7 @@ class Game extends Component {
         });
         if (newScore >= this.state.topScore) {
             this.setState({ topScore: newScore });
-        }
-        if (this.state.topScore === 12) {
-            alert("You win! That's a great memory you have!");
-        }
+        };
     };
 
     handleReset = () => {
@@ -52,7 +50,7 @@ class Game extends Component {
                 <Jumbotron />
                 <div className="container justify-content-center">
                     <div className="row d-flex justify-content-around">
-                        {Randomizer.randomizeArray(data).map(item =>
+                        {Randomizer.randomizeArray(data).slice(0, 12).map(item =>
                             <Tile
                                 handleImgClick={this.handleImgClick}
                                 key={item.id} {...item}
